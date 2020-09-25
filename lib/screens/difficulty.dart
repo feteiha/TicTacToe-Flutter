@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
-import 'package:flutter/services.dart';
-import 'difficulty.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tictactoe/screens/two_player.dart';
+import 'package:tictactoe/screens/one_player.dart';
+import 'package:flutter/services.dart';
 
-final kHintTextStyle = TextStyle(
-  color: Colors.white54,
-  fontFamily: 'OpenSans',
-);
 
-final kLabelStyle = TextStyle(
-  color: Colors.white,
-  fontWeight: FontWeight.bold,
-  fontFamily: 'OpenSans',
-);
 
 final kBoxDecorationStyle = BoxDecoration(
   color: Color(0xFF6CA8F1),
@@ -29,32 +18,12 @@ final kBoxDecorationStyle = BoxDecoration(
 );
 
 
-class WelcomeScreen extends StatefulWidget {
+class DifficultyScreen extends StatefulWidget {
   @override
-  _WelcomeScreenState createState() => _WelcomeScreenState();
+  _DifficultyScreenState createState() => _DifficultyScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin{
-
-  Animation<double> animation;
-  AnimationController controller;
-
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = new AnimationController( duration: const Duration(milliseconds: 3000),vsync: this);
-    animation = new Tween(begin: 0.0, end: 200.0).animate(controller);
-    animation.addListener(() {
-      setState(() {
-        //The state of the animation has changed
-      });
-    });
-
-    controller.forward();
-  }
-
+class _DifficultyScreenState extends State<DifficultyScreen> with SingleTickerProviderStateMixin{
 
   Widget _buildBtn(String text) {
     return Container(
@@ -62,13 +31,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => text == '2-Players'?{
+        onPressed: () => text == 'Easy'?{
           Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TwoPlayer()),)}:
+            context,
+            MaterialPageRoute(builder: (context) => OnePlayer(true)),)}:
         {Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DifficultyScreen()),)},
+          MaterialPageRoute(builder: (context) => OnePlayer(false)),)},
 
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -79,10 +48,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
           text,
     style: GoogleFonts.pressStart2P(
     textStyle:
-    TextStyle(color: Color(0xFF527DAA), fontSize: 16, letterSpacing: 1.5, fontWeight: FontWeight.bold)
-    )        ),
+    TextStyle(color: Color(0xFF527DAA), fontSize: 18, letterSpacing: 1.5, fontWeight: FontWeight.bold)
+        ),
       ),
-    );
+    ));
   }
 
   @override
@@ -112,41 +81,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                 ),
               ),
               Container(
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 70.0,
-                  ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 40.0,
+                  vertical: 70.0,
+                ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Tic Tac Toe',
+                        'One Player',
                         style: GoogleFonts.pressStart2P(
                             textStyle:
-                            TextStyle(color: Colors.white , fontSize: 20, letterSpacing: 1.5, fontWeight: FontWeight.bold)
-
+                            TextStyle(color: Colors.white, fontSize: 28,  fontWeight: FontWeight.bold)
                         ),
                       ),
-
-                  new Container(
-                    padding: new EdgeInsets.all(32.0),
-                    height: animation.value,
-                    width: animation.value,
-                    
-                    child: new Center(
-                    child: new Image(image: new AssetImage('images/TTTWelcome.png')),
-                  ),
-                  ),
-                    _buildBtn('1-Player'),
-                      _buildBtn('2-Players'),
+                      _buildBtn('Easy'),
+                      _buildBtn('Hard'),
 
                     ],
                   ),
                 ),
-              )
             ],
           ),
         ),

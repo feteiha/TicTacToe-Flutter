@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:tictactoe/bot/bot.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 class OnePlayer extends StatefulWidget {
+  final bool isEasy;
+  OnePlayer(this.isEasy);
   @override
   _OnePlayer createState() => _OnePlayer();
+
 }
 
 class _OnePlayer extends State<OnePlayer> {
   int yourWins = 0;
   int pcWins = 0;
   bool _cantap = true;
+  bool _isEasy = false;
+  Bot b = new Bot();
 
   List<String> _matrix = ['', '', '', '', '', '', '', '', ''];
   Future<void> _tapped(int index) async {
@@ -48,8 +55,12 @@ class _OnePlayer extends State<OnePlayer> {
 
   void _oturn() {
     var rng = new Random();
-    int choice = rng.nextInt(9);
-     bool inserted = false;
+    int choice;
+    if (!_isEasy)
+      choice = b.play(_matrix);
+    else
+      choice = rng.nextInt(9);
+    bool inserted = false;
     while (!inserted) {
       if (_matrix[choice] == '') {
         setState(() {
@@ -157,6 +168,7 @@ class _OnePlayer extends State<OnePlayer> {
   }
 
   Widget build(BuildContext context) {
+    _isEasy = widget.isEasy;
     return Scaffold(
         body: Stack(children: <Widget>[
       Container(
