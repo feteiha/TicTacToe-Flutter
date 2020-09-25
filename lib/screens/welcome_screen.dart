@@ -28,23 +28,22 @@ final kBoxDecorationStyle = BoxDecoration(
   ],
 );
 
-
 class WelcomeScreen extends StatefulWidget {
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin{
-
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with SingleTickerProviderStateMixin {
   Animation<double> animation;
   AnimationController controller;
-
 
   @override
   void initState() {
     super.initState();
 
-    controller = new AnimationController( duration: const Duration(milliseconds: 3000),vsync: this);
+    controller = new AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
     animation = new Tween(begin: 0.0, end: 200.0).animate(controller);
     animation.addListener(() {
       setState(() {
@@ -55,32 +54,62 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
     controller.forward();
   }
 
-
   Widget _buildBtn(String text) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => text == '2-Players'?{
-          Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TwoPlayer()),)}:
-        {Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DifficultyScreen()),)},
-
+        onPressed: () => text == '2-Players'
+            ? {
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        transitionDuration: Duration(milliseconds: 500),
+                        transitionsBuilder:
+                            (context, animation, animationTime, child) {
+                          return ScaleTransition(
+                            alignment: Alignment.center,
+                            scale: animation,
+                            child: child,
+                          );
+                        },
+                        pageBuilder: (context, animation, animationTime) {
+                          return TwoPlayer();
+                        }))
+              }
+            :
+            {
+              Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                      transitionDuration: Duration(milliseconds: 500),
+                      transitionsBuilder:
+                          (context, animation, animationTime, child) {
+                        return SlideTransition(
+                          position: Tween(begin: Offset(1.0, 0.0), end: Offset.zero).animate(CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.ease,
+                          )),
+                          child: child,
+                        );
+                      },
+                      pageBuilder: (context, animation, animationTime) {
+                        return DifficultyScreen();
+                      }))
+            },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
         color: Colors.white,
-        child: Text(
-          text,
-    style: GoogleFonts.pressStart2P(
-    textStyle:
-    TextStyle(color: Color(0xFF527DAA), fontSize: 16, letterSpacing: 1.5, fontWeight: FontWeight.bold)
-    )        ),
+        child: Text(text,
+            style: GoogleFonts.pressStart2P(
+                textStyle: TextStyle(
+                    color: Color(0xFF527DAA),
+                    fontSize: 16,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.bold))),
       ),
     );
   }
@@ -125,24 +154,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                       Text(
                         'Tic Tac Toe',
                         style: GoogleFonts.pressStart2P(
-                            textStyle:
-                            TextStyle(color: Colors.white , fontSize: 20, letterSpacing: 1.5, fontWeight: FontWeight.bold)
-
+                            textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                letterSpacing: 1.5,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                      new Container(
+                        padding: new EdgeInsets.all(32.0),
+                        height: animation.value,
+                        width: animation.value,
+                        child: new Center(
+                          child: new Image(
+                              image: new AssetImage('images/TTTWelcome.png')),
                         ),
                       ),
-
-                  new Container(
-                    padding: new EdgeInsets.all(32.0),
-                    height: animation.value,
-                    width: animation.value,
-                    
-                    child: new Center(
-                    child: new Image(image: new AssetImage('images/TTTWelcome.png')),
-                  ),
-                  ),
-                    _buildBtn('1-Player'),
+                      _buildBtn('1-Player'),
                       _buildBtn('2-Players'),
-
                     ],
                   ),
                 ),

@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tictactoe/screens/one_player.dart';
 import 'package:flutter/services.dart';
 
-
-
 final kBoxDecorationStyle = BoxDecoration(
   color: Color(0xFF6CA8F1),
   borderRadius: BorderRadius.circular(10.0),
@@ -17,41 +15,67 @@ final kBoxDecorationStyle = BoxDecoration(
   ],
 );
 
-
 class DifficultyScreen extends StatefulWidget {
   @override
   _DifficultyScreenState createState() => _DifficultyScreenState();
 }
 
-class _DifficultyScreenState extends State<DifficultyScreen> with SingleTickerProviderStateMixin{
-
+class _DifficultyScreenState extends State<DifficultyScreen>
+    with SingleTickerProviderStateMixin {
   Widget _buildBtn(String text) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () => text == 'Easy'?{
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => OnePlayer(true)),)}:
-        {Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OnePlayer(false)),)},
-
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.white,
-        child: Text(
-          text,
-    style: GoogleFonts.pressStart2P(
-    textStyle:
-    TextStyle(color: Color(0xFF527DAA), fontSize: 18, letterSpacing: 1.5, fontWeight: FontWeight.bold)
-        ),
-      ),
-    ));
+        padding: EdgeInsets.symmetric(vertical: 25.0),
+        width: double.infinity,
+        child: RaisedButton(
+          elevation: 5.0,
+          onPressed: () => text == 'Easy'
+              ? {
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          transitionDuration: Duration(milliseconds: 500),
+                          transitionsBuilder:
+                              (context, animation, animationTime, child) {
+                            return ScaleTransition(
+                              alignment: Alignment.center,
+                              scale: animation,
+                              child: child,
+                            );
+                          },
+                          pageBuilder: (context, animation, animationTime) {
+                            return OnePlayer(true);
+                          }))
+                }
+              : Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                      transitionDuration: Duration(milliseconds: 500),
+                      transitionsBuilder:
+                          (context, animation, animationTime, child) {
+                        return ScaleTransition(
+                          alignment: Alignment.center,
+                          scale: animation,
+                          child: child,
+                        );
+                      },
+                      pageBuilder: (context, animation, animationTime) {
+                        return OnePlayer(false);
+                      })),
+          padding: EdgeInsets.all(15.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          color: Colors.white,
+          child: Text(
+            text,
+            style: GoogleFonts.pressStart2P(
+                textStyle: TextStyle(
+                    color: Color(0xFF527DAA),
+                    fontSize: 18,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.bold)),
+          ),
+        ));
   }
 
   @override
@@ -85,23 +109,23 @@ class _DifficultyScreenState extends State<DifficultyScreen> with SingleTickerPr
                   horizontal: 40.0,
                   vertical: 70.0,
                 ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'One Player',
-                        style: GoogleFonts.pressStart2P(
-                            textStyle:
-                            TextStyle(color: Colors.white, fontSize: 28,  fontWeight: FontWeight.bold)
-                        ),
-                      ),
-                      _buildBtn('Easy'),
-                      _buildBtn('Hard'),
-
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'One Player',
+                      style: GoogleFonts.pressStart2P(
+                          textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    _buildBtn('Easy'),
+                    _buildBtn('Hard'),
+                  ],
                 ),
+              ),
             ],
           ),
         ),
